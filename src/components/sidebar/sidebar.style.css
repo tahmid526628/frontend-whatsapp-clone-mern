@@ -49,10 +49,11 @@
     border: none;
     outline-width: 0; /* this outline width remove the blue or black outline after pressing the input box*/
     margin-left: 10px;
+    width: 100%;
 }
 
 .sidebar__chats {
     flex: 1;
     background-color: white;
-    overflow: scroll;
+    overflow: auto;
 }

@@ -31,7 +31,7 @@
     background-repeat: repeat;
     background-position: center;
     padding: 30px;
-    overflow: scroll;
+    overflow: auto;
 }
 
 .chat__footer {
@@ -59,7 +59,7 @@
     display: none;
 }
 
-.chat__footer > .MuiSvgIcon-root {
+.chat__footer .MuiSvgIcon-root {
     padding: 10px;
     color: gray;
 }

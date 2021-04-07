@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useRef, useEffect, useState } from 'react';
+import axios from '../../axios/axios';
 
 import './chat.style.css';
 
@@ -7,7 +8,34 @@ import { SearchOutlined, AttachFile, MoreVert, InsertEmoticon, MicOutlined } fro
 
 import Message from '../message/message.component';
 
-function Chat() {
+function Chat({ messages }) {
+    const [input, setInput] = useState("");
+
+    const messagesEndRef = useRef(null)
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
+
+    useEffect(() => {
+        scrollToBottom()
+    }, [messages]);
+    
+    const sendMessage = async (e) => {
+        e.preventDefault();
+
+        await axios.post('/messages/new', {
+            message: input,
+            name: "Demo Name",
+            timeStamp: "just now",
+            received: false
+        });
+
+        setInput("");
+    };
+
+    
+
     return (
         <div className="chat">
             <div className="chat__header">
@@ -30,25 +58,34 @@ function Chat() {
             </div>
 
             <div className="chat__body">
-                <Message />
-                <Message isReceiver={true} />
-                <Message />
+                {messages.map((message) => (
+                    <Message message={message} key={message._id}/>
+                ))}
+                <div ref={messagesEndRef} />
             </div>
 
             <div className="chat__footer">
-                <InsertEmoticon />
+                <IconButton>
+                    <InsertEmoticon />
+                </IconButton>
                 <form>
                     <input
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
                         placeholder="Type a message"
                         type="text" 
                     />
                     <button
+                    onClick={sendMessage}
                         type="submit"
+                        
                     >
                         Send
                     </button>
                 </form>
-                <MicOutlined />
+                <IconButton>
+                    <MicOutlined />
+                </IconButton>
             </div>
         </div>
     )

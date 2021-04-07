@@ -2,13 +2,13 @@ import React from 'react';
 
 import './message.style.css';
 
-const Message = ({ isReceiver }) => {
+const Message = ({ message }) => {
     return(
-        <p className={`chat__message ${isReceiver ? "chat__reciever" :  ""}`}>
-            <span className="chat__name">Tahmid</span>
-            This is a message
+        <p className={`chat__message ${message.received ? "chat__reciever" :  ""}`}>
+            <span className="chat__name">{message.name}</span>
+            {message.message}
             <span className="chat__timestamp">
-                {new Date().toUTCString()}
+                {message.timeStamp}
             </span>
         </p>
     );
