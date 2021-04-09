@@ -1,18 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import Pusher from 'pusher-js';
 import axios from './axios/axios';
+import { Switch, Route } from 'react-router-dom';
 
 import './App.css';
 
 import Sidebar from './components/sidebar/sidebar.component';
 import Chat from './components/chat/chat.component';
+import Login from './components/login/login.component';
 
 function App() {
   const [messages, setMessages] = useState([]);
+  const [rooms, setRooms] = useState([]);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     axios.get("/messages/sync").then((response) => {
       setMessages(response.data)
+    });
+  }, []);
+
+  useEffect(() => {
+    axios.get("/rooms/sync").then((response) => {
+      setRooms(response.data)
     });
   }, []);
 
@@ -41,13 +51,23 @@ function App() {
   
   return (
     <div className="app">
-      <div className="app__body">
+      {!user ? (
+        <Login />
+      ) : (
+        <div className="app__body">
         {/* sidebar */}
         <Sidebar />
-
-        {/* chat */}
-        <Chat messages={ messages } />
+        <Switch>
+          <Route exact path="/">
+            <h1>Hello world</h1>
+          </Route>
+          <Route path="/rooms/:roomId">
+            {/* chat */}
+            <Chat rooms={ rooms } messages={ messages } />
+          </Route>
+        </Switch>
       </div>
+      )}
     </div>
   );
 }
