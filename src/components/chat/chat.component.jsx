@@ -8,12 +8,14 @@ import { Avatar, IconButton } from '@material-ui/core';
 import { SearchOutlined, AttachFile, MoreVert, InsertEmoticon, MicOutlined } from '@material-ui/icons';
 
 import Message from '../message/message.component';
+import { useStateValue } from '../../contextAPI/StateProvider';
 
 function Chat({ rooms, messages }) {
     const [input, setInput] = useState("");
     const [roomName, setRoomName] = useState("");
     // const [roomMessages, setRoomMessages] = useState([]);
     const { roomId } = useParams();
+    const [{ user }] = useStateValue();
 
     useEffect(() => {
         setRoomName(roomId ? rooms.map(room => (
@@ -37,7 +39,8 @@ function Chat({ rooms, messages }) {
 
         await axios.post('/messages/new', {
             message: input,
-            name: "Demo Name",
+            name: user?.displayName,
+            email: user?.email,
             timeStamp: new Date().toLocaleString(),
             received: true,
             roomId: roomId
@@ -52,7 +55,10 @@ function Chat({ rooms, messages }) {
                 <Avatar />
                 <div className="chat__header_info">
                     <h3>{ roomName }</h3>
-                    <p>Last seen at ... ...</p>
+                    <p>
+                        Last seen{" "}
+                        {messages.filter(message => roomId === message.roomId)[messages.filter(message => roomId === message.roomId).length - 1]?.timeStamp}
+                    </p>
                 </div>
                 <div className="chat__header_right">
                     <IconButton>
@@ -70,7 +76,7 @@ function Chat({ rooms, messages }) {
             <div className="chat__body">
                 {messages.filter(message => roomId === message.roomId)
                 .map((message) => (
-                    <Message key={message._id} {...message} />
+                    <Message key={message._id} {...message}  />
                 ))}
                 <div ref={messagesEndRef} />
             </div>

@@ -10,9 +10,11 @@ import {Avatar, IconButton} from '@material-ui/core';
 
 import SidebarChat from '../sidebar-chat/sidebar-chat.component';
 import axios from '../../axios/axios';
+import { useStateValue } from '../../contextAPI/StateProvider';
 
-function Sidebar() {
+function Sidebar({ messages }) {
     const [rooms, setRooms] = useState([]);
+    const [{ user }] = useStateValue();
 
     useEffect(() => {
         // retrieving rooms from database
@@ -28,7 +30,7 @@ function Sidebar() {
     return (
         <div className="sidebar">
             <div className="sidebar__header">
-                <Avatar src="" />
+                <Avatar src={user?.photoURL} />
                 <div className="sidebar__header__right">
                     <IconButton>
                         <DonutLargeIcon />
@@ -52,8 +54,9 @@ function Sidebar() {
             <div className="sidebar__chats">
                 <SidebarChat addNewChat parentCallBack={handleCallBack} /> {/* this is add new chat button */}
                 {rooms.map((room) => 
-                    <SidebarChat key={room._id} {...room} />
+                    <SidebarChat key={room._id} messages={messages} {...room} />
                 )}
+                {/* <SidebarChat isLogout parentCallBack={handleCallBack} /> this is add new chat button */}
             </div>
         </div>
     )

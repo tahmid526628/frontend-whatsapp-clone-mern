@@ -8,11 +8,12 @@ import './App.css';
 import Sidebar from './components/sidebar/sidebar.component';
 import Chat from './components/chat/chat.component';
 import Login from './components/login/login.component';
+import { useStateValue } from './contextAPI/StateProvider';
 
 function App() {
   const [messages, setMessages] = useState([]);
   const [rooms, setRooms] = useState([]);
-  const [user, setUser] = useState(null);
+  const [{ user }] = useStateValue();
 
   useEffect(() => {
     axios.get("/messages/sync").then((response) => {
@@ -56,11 +57,8 @@ function App() {
       ) : (
         <div className="app__body">
         {/* sidebar */}
-        <Sidebar />
+        <Sidebar messages={messages} />
         <Switch>
-          <Route exact path="/">
-            <h1>Hello world</h1>
-          </Route>
           <Route path="/rooms/:roomId">
             {/* chat */}
             <Chat rooms={ rooms } messages={ messages } />

@@ -4,11 +4,18 @@ import {Button} from '@material-ui/core';
 import './login.style.css';
 
 import { auth, provider } from '../../firebase/firebase';
+import { useStateValue } from '../../contextAPI/StateProvider';
+import { actionTypes } from '../../contextAPI/reducer';
 
 function Login (){
+    const [{}, dispatch] = useStateValue();
+
     const signInUsingGoogle = () => {
         auth.signInWithPopup(provider).then(result => 
-            console.log(result)
+            dispatch({
+                type: actionTypes.SET_USER,
+                user: result.user
+            })
         ).catch(err => alert(err.message));
     }
 
